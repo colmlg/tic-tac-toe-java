@@ -16,7 +16,7 @@ public class Main {
      */
     public static void main(String[] args) {
         MainCoordinator coordinator = new MainCoordinator();
-        coordinator.goToLogin();
+        coordinator.start();
     }
     
 }

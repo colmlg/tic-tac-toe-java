@@ -11,16 +11,16 @@ import ttt.james.server.*;
  */
 public class RegisterJFrame extends javax.swing.JFrame {
 
-    private MainCoordinator coordinator;
-    private TTTWebService service = new TTTWebService_Service().getTTTWebServicePort();
+    private final MainCoordinator coordinator;
+    private final TTTWebService service = new TTTWebService_Service().getTTTWebServicePort();
     /**
      * Creates new form RegisterJFrame
+     * @param coordinator
      */
     public RegisterJFrame(MainCoordinator coordinator) {
-        super();
         this.coordinator = coordinator;
-        setLocationRelativeTo(null);
         initComponents();
+        setLocationRelativeTo(null);
     }
     
     private void registerUser() {
@@ -49,7 +49,7 @@ public class RegisterJFrame extends javax.swing.JFrame {
             default:
                 try {
                     int userId = Integer.parseInt(result);
-                    coordinator.goToMain(userId);
+                    coordinator.goToMainMenu(userId);
                 } catch (NumberFormatException e) {
                     errorLabel.setText("Error: Invalid Response.");
                 }
@@ -81,6 +81,7 @@ public class RegisterJFrame extends javax.swing.JFrame {
         errorLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Tic Tac Toe - Registration");
 
         firstNameLabel.setText("First Name:");
 
@@ -198,7 +199,7 @@ public class RegisterJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_registerButtonActionPerformed
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-        coordinator.goToLogin();
+        coordinator.start();
     }//GEN-LAST:event_backButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

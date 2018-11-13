@@ -14,6 +14,11 @@ import javax.swing.JFrame;
 public class MainCoordinator {
     private JFrame currentFrame;
     
+    public void start() {
+        WelcomeJFrame welcome = new WelcomeJFrame(this);
+        setCurrentFrame(welcome);
+    }
+    
     public void goToLogin() {
         LoginJFrame login = new LoginJFrame(this);
         setCurrentFrame(login);
@@ -24,8 +29,9 @@ public class MainCoordinator {
         setCurrentFrame(register);
     }
     
-    public void goToMain(int userId) {
-        System.out.println("TODO: Implement main screen. userId:" + userId);
+    public void goToMainMenu(int userId) {
+        MainMenuJFrame mainMenu = new MainMenuJFrame(this, userId);
+        setCurrentFrame(mainMenu);
     }
     
     private void setCurrentFrame(JFrame frame) {
