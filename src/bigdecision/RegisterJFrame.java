@@ -4,19 +4,56 @@
  * and open the template in the editor.
  */
 package bigdecision;
-
+import ttt.james.server.*;
 /**
  *
  * @author colmlegear
  */
 public class RegisterJFrame extends javax.swing.JFrame {
 
+    private MainCoordinator coordinator;
+    private TTTWebService service = new TTTWebService_Service().getTTTWebServicePort();
     /**
      * Creates new form RegisterJFrame
      */
-    public RegisterJFrame() {
+    public RegisterJFrame(MainCoordinator coordinator) {
+        super();
+        this.coordinator = coordinator;
         setLocationRelativeTo(null);
         initComponents();
+    }
+    
+    private void registerUser() {
+        errorLabel.setText(" ");
+        
+        if (!passwordField.getText().equals(confirmPasswordField.getText())) {
+            errorLabel.setText("Error: Passwords must match");
+            return;
+        }
+        
+        String result = service.register(usernameField.getText(), passwordField.getText(), firstNameField.getText(), surnameField.getText());
+        
+        switch (result) {
+            case "ERROR-REPEAT":
+                errorLabel.setText("Error: Username already exists");
+                break;
+            case "ERROR-INSERT":
+                errorLabel.setText("Error: Couldn't create user.");
+                break;
+            case "ERROR-RETRIEVE":
+                errorLabel.setText("Error: Couldn't retrieve user.");
+                break;
+            case "ERROR-DB":
+                errorLabel.setText("Error: Couldn't connect to DB.");
+                break;
+            default:
+                try {
+                    int userId = Integer.parseInt(result);
+                    coordinator.goToMain(userId);
+                } catch (NumberFormatException e) {
+                    errorLabel.setText("Error: Invalid Response.");
+                }
+        }
     }
 
     /**
@@ -41,6 +78,7 @@ public class RegisterJFrame extends javax.swing.JFrame {
         backButton = new javax.swing.JButton();
         registerButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        errorLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -55,6 +93,11 @@ public class RegisterJFrame extends javax.swing.JFrame {
         usernameLabel.setText("Username:");
 
         backButton.setText("Back");
+        backButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backButtonActionPerformed(evt);
+            }
+        });
 
         registerButton.setText("Register");
         registerButton.addActionListener(new java.awt.event.ActionListener() {
@@ -65,6 +108,9 @@ public class RegisterJFrame extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         jLabel1.setText("Registration");
+
+        errorLabel.setForeground(new java.awt.Color(255, 0, 0));
+        errorLabel.setText(" ");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -77,10 +123,9 @@ public class RegisterJFrame extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(confirmPasswordLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(passwordLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(surnameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(firstNameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addComponent(passwordLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(surnameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(firstNameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addComponent(usernameLabel))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -101,7 +146,11 @@ public class RegisterJFrame extends javax.swing.JFrame {
                         .addComponent(backButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(registerButton)
-                        .addGap(18, 18, 18))))
+                        .addGap(18, 18, 18))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(errorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
@@ -132,7 +181,9 @@ public class RegisterJFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(confirmPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(confirmPasswordLabel))
-                .addGap(49, 49, 49)
+                .addGap(15, 15, 15)
+                .addComponent(errorLabel)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(backButton)
                     .addComponent(registerButton))
@@ -143,13 +194,18 @@ public class RegisterJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void registerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerButtonActionPerformed
-        // TODO add your handling code here:
+        registerUser();
     }//GEN-LAST:event_registerButtonActionPerformed
+
+    private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
+        coordinator.goToLogin();
+    }//GEN-LAST:event_backButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
     private javax.swing.JPasswordField confirmPasswordField;
     private javax.swing.JLabel confirmPasswordLabel;
+    private javax.swing.JLabel errorLabel;
     private javax.swing.JTextField firstNameField;
     private javax.swing.JLabel firstNameLabel;
     private javax.swing.JLabel jLabel1;

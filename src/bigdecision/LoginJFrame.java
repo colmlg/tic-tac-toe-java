@@ -11,10 +11,14 @@ package bigdecision;
  */
 public class LoginJFrame extends javax.swing.JFrame {
 
+    private MainCoordinator coordinator;
+    
     /**
      * Creates new form LoginJFrame
      */
-    public LoginJFrame() {
+    public LoginJFrame(MainCoordinator coordinator) {
+        super();
+        this.coordinator = coordinator;
         setLocationRelativeTo(null);
         initComponents();
     }
@@ -37,12 +41,6 @@ public class LoginJFrame extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        usernameField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                usernameFieldActionPerformed(evt);
-            }
-        });
 
         usernameLabel.setText("Username:");
 
@@ -106,12 +104,8 @@ public class LoginJFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void usernameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_usernameFieldActionPerformed
-
     private void registerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerButtonActionPerformed
-        // TODO add your handling code here:
+        coordinator.goToRegister();
     }//GEN-LAST:event_registerButtonActionPerformed
 
 
