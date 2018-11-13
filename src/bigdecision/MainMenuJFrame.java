@@ -15,10 +15,12 @@ import ttt.james.server.TTTWebService_Service;
 public class MainMenuJFrame extends javax.swing.JFrame {
     private final TTTWebService service = new TTTWebService_Service().getTTTWebServicePort();
     private final MainCoordinator coordinator;
-    private int userId;
+    private final int userId;
     
     /**
      * Creates new form MainMenuJFrame
+     * @param coordinator
+     * @param userId
      */
     public MainMenuJFrame(MainCoordinator coordinator, int userId) {
         this.coordinator = coordinator;
