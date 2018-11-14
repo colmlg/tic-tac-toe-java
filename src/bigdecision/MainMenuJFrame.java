@@ -5,6 +5,7 @@
  */
 package bigdecision;
 
+import javax.swing.JTable;
 import ttt.james.server.TTTWebService;
 import ttt.james.server.TTTWebService_Service;
 
@@ -27,6 +28,23 @@ public class MainMenuJFrame extends javax.swing.JFrame {
         this.userId = userId;
         initComponents();
         setLocationRelativeTo(null);
+        setupGameTable();
+    }
+    
+    private void setupGameTable() {
+        String response = service.showOpenGames();
+        
+        switch(response) {
+            case "ERROR-NOGAMES":
+                gameTable.setModel(new GamesTableModel(new String[0][0]));
+            case "ERROR-DB":
+                errorLabel.setText("Error connecting to database.");
+                break;
+            default:
+                GamesTableModel model = new GamesTableModel(response);
+                gameTable.setModel(model);
+                break;  
+        }
     }
 
     /**
@@ -41,6 +59,9 @@ public class MainMenuJFrame extends javax.swing.JFrame {
         myScoresButton = new javax.swing.JButton();
         leaderboardButton = new javax.swing.JButton();
         newGameButton = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        gameTable = new javax.swing.JTable();
+        errorLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Tic Tac Toe - Main Menu");
@@ -66,23 +87,49 @@ public class MainMenuJFrame extends javax.swing.JFrame {
             }
         });
 
+        gameTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(gameTable);
+
+        errorLabel.setForeground(new java.awt.Color(255, 0, 0));
+        errorLabel.setText(" ");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(myScoresButton)
-                .addGap(18, 18, 18)
-                .addComponent(leaderboardButton)
-                .addGap(37, 37, 37)
-                .addComponent(newGameButton)
-                .addContainerGap(78, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(errorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 367, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(myScoresButton)
+                                .addGap(18, 18, 18)
+                                .addComponent(leaderboardButton)
+                                .addGap(37, 37, 37)
+                                .addComponent(newGameButton)))
+                        .addGap(0, 13, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(266, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(errorLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(myScoresButton)
                     .addComponent(leaderboardButton)
@@ -102,11 +149,14 @@ public class MainMenuJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_leaderboardButtonActionPerformed
 
     private void newGameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newGameButtonActionPerformed
-        // TODO add your handling code here:
+        setupGameTable();
     }//GEN-LAST:event_newGameButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel errorLabel;
+    private javax.swing.JTable gameTable;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton leaderboardButton;
     private javax.swing.JButton myScoresButton;
     private javax.swing.JButton newGameButton;

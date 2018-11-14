@@ -14,6 +14,7 @@ public class WelcomeJFrame extends javax.swing.JFrame {
     private final MainCoordinator coordinator;
     /**
      * Creates new form WelcomeJFrame
+     * @param coordinator
      */
     public WelcomeJFrame(MainCoordinator coordinator) {
         this.coordinator = coordinator;
