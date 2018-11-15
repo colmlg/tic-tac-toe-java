@@ -53,7 +53,16 @@ public class MainMenuJFrame extends javax.swing.JFrame {
             return;
         }
         String value = gameTable.getValueAt(row, GamesTableModel.GAME_ID_COLUMN).toString();
-        System.out.println("Selected game " + value);
+        int gameId = Integer.parseInt(value);
+        String response = service.joinGame(userId, gameId);
+        switch (response) {
+            case "ERROR-DB":
+                break;
+            case "0":
+                break;
+            case "1":
+                coordinator.goToGameScreen(userId, gameId);
+        }
     }
 
     /**
