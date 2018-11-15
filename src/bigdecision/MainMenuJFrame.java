@@ -46,6 +46,15 @@ public class MainMenuJFrame extends javax.swing.JFrame {
                 break;  
         }
     }
+    
+      private void joinGame() {
+        int row = gameTable.getSelectedRow();
+        if (row == -1) {
+            return;
+        }
+        String value = gameTable.getValueAt(row, GamesTableModel.GAME_ID_COLUMN).toString();
+        System.out.println("Selected game " + value);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -62,6 +71,7 @@ public class MainMenuJFrame extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         gameTable = new javax.swing.JTable();
         errorLabel = new javax.swing.JLabel();
+        joinGameButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Tic Tac Toe - Main Menu");
@@ -103,6 +113,13 @@ public class MainMenuJFrame extends javax.swing.JFrame {
         errorLabel.setForeground(new java.awt.Color(255, 0, 0));
         errorLabel.setText(" ");
 
+        joinGameButton.setText("Join Game");
+        joinGameButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                joinGameButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -111,29 +128,31 @@ public class MainMenuJFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(errorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 367, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(errorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 367, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(myScoresButton)
-                                .addGap(18, 18, 18)
-                                .addComponent(leaderboardButton)
-                                .addGap(37, 37, 37)
-                                .addComponent(newGameButton)))
-                        .addGap(0, 13, Short.MAX_VALUE)))
+                        .addComponent(myScoresButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(leaderboardButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(newGameButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(joinGameButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(errorLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(myScoresButton)
                     .addComponent(leaderboardButton)
-                    .addComponent(newGameButton))
+                    .addComponent(newGameButton)
+                    .addComponent(joinGameButton))
                 .addContainerGap())
         );
 
@@ -152,11 +171,16 @@ public class MainMenuJFrame extends javax.swing.JFrame {
         setupGameTable();
     }//GEN-LAST:event_newGameButtonActionPerformed
 
+    private void joinGameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_joinGameButtonActionPerformed
+        joinGame();
+    }//GEN-LAST:event_joinGameButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel errorLabel;
     private javax.swing.JTable gameTable;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton joinGameButton;
     private javax.swing.JButton leaderboardButton;
     private javax.swing.JButton myScoresButton;
     private javax.swing.JButton newGameButton;
