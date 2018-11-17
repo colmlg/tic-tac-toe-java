@@ -8,6 +8,7 @@ package bigdecision;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import ttt.james.server.TTTWebService;
 import ttt.james.server.TTTWebService_Service;
 
@@ -16,16 +17,20 @@ import ttt.james.server.TTTWebService_Service;
  * @author Colm
  */
 public class GameScreenJFrame extends javax.swing.JFrame {
+
     private final TTTWebService service = new TTTWebService_Service().getTTTWebServicePort();
     private final MainCoordinator coordinator;
     private final int userId;
     private final int gameId;
     private final int ROWS = 3;
     private final int COLUMNS = 3;
+    private boolean isMyTurn = true;
 
     private JButton[][] gameButtons = new JButton[ROWS][COLUMNS];
+
     /**
      * Creates new form GameScreenJFrame
+     *
      * @param coordinator
      * @param userId
      * @param gameId
@@ -39,59 +44,62 @@ public class GameScreenJFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         updateGameBoard();
     }
-    
+
     private void initGameBoard() {
-           GridLayout layout = new GridLayout(ROWS, COLUMNS);
-           boardPanel.setLayout(layout);
-           for(int i = 0; i < ROWS; i++) {
-               for (int j = 0; j < COLUMNS; j++) {
-                   final int row = i;
-                   final int column = j;
-                   JButton button = new JButton();
-                   button.addActionListener(e -> onButtonPressed(row, column));
-                   boardPanel.add(button);
-                   gameButtons[row][column] = button;
-               }
-           }
-           boardPanel.setPreferredSize(new Dimension(240, 240));
+        GridLayout layout = new GridLayout(ROWS, COLUMNS);
+        boardPanel.setLayout(layout);
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLUMNS; j++) {
+                final int row = i;
+                final int column = j;
+                JButton button = new JButton();
+                button.addActionListener(e -> onButtonPressed(row, column));
+                boardPanel.add(button);
+                gameButtons[row][column] = button;
+            }
+        }
+        boardPanel.setPreferredSize(new Dimension(240, 240));
     }
-    
+
     private void updateGameBoard() {
         String response = service.getBoard(gameId);
-        if (response.equals("ERROR-NOMOVES") || response.equals("ERROR-DB")) {
+        if (response.equals(ErrorCodes.NO_MOVES) || response.equals(ErrorCodes.DB)) {
             return;
         }
-        
+
         String[] moves = response.split("\n");
-        for(String move : moves) {
+
+        //Check who made the last move so we don't make 2 in a row
+        int lastMovePlayerId = Integer.parseInt(moves[moves.length - 1].split(",")[0]);
+        isMyTurn = lastMovePlayerId != userId;
+
+        for (String move : moves) {
             String[] components = move.split(",");
             int playerId = Integer.parseInt(components[0]);
-            int column =  Integer.parseInt(components[1]);
-            int row =  Integer.parseInt(components[2]);
-            
-            String marker = playerId == userId ? "X" : "O";
+            int column = Integer.parseInt(components[1]);
+            int row = Integer.parseInt(components[2]);
+
+            String marker;
+            if (playerId == userId) {
+                marker = "X";
+            } else {
+                marker = "O";
+            }
             gameButtons[row][column].setText(marker);
+            gameButtons[row][column].setEnabled(false);
         }
     }
-    
+
     private void onButtonPressed(int row, int column) {
-       String response = service.takeSquare(column, row, gameId, userId);
-       switch (response) {
-           case "ERROR-TAKEN":
-               updateGameBoard();
-               return;
-           case "ERROR-DB":
-               break;
-           case "ERROR":
-               break;
-           case "0":
-               updateGameBoard();
-               break;
-           case "1":
-               updateGameBoard();
-               break;
-       }
+        if (!isMyTurn) {
+            JOptionPane.showMessageDialog(null, "It's not your turn!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        service.takeSquare(column, row, gameId, userId);
+        updateGameBoard();
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
