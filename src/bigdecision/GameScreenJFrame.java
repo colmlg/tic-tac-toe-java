@@ -7,6 +7,8 @@ package bigdecision;
 
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.util.Timer;
+import java.util.TimerTask;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import ttt.james.server.TTTWebService;
@@ -19,14 +21,14 @@ import ttt.james.server.TTTWebService_Service;
 public class GameScreenJFrame extends javax.swing.JFrame {
 
     private final TTTWebService service = new TTTWebService_Service().getTTTWebServicePort();
+    private final Timer timer = new Timer();
     private final MainCoordinator coordinator;
     private final int userId;
     private final int gameId;
     private final int ROWS = 3;
     private final int COLUMNS = 3;
     private boolean isMyTurn = true;
-
-    private JButton[][] gameButtons = new JButton[ROWS][COLUMNS];
+    private final JButton[][] gameButtons = new JButton[ROWS][COLUMNS];
 
     /**
      * Creates new form GameScreenJFrame
@@ -42,7 +44,7 @@ public class GameScreenJFrame extends javax.swing.JFrame {
         initComponents();
         initGameBoard();
         setLocationRelativeTo(null);
-        updateGameBoard();
+        startTimer();
     }
 
     private void initGameBoard() {
@@ -59,6 +61,17 @@ public class GameScreenJFrame extends javax.swing.JFrame {
             }
         }
         boardPanel.setPreferredSize(new Dimension(240, 240));
+    }
+    
+     private void startTimer() {
+        int interval = 1000;
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                updateGameBoard();
+            }
+        };
+        timer.scheduleAtFixedRate(task, 0, interval); 
     }
 
     private void updateGameBoard() {
@@ -158,6 +171,7 @@ public class GameScreenJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
+        timer.cancel();
         coordinator.goToMainMenu(userId);
     }//GEN-LAST:event_backButtonActionPerformed
 
