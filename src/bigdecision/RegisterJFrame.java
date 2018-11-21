@@ -34,16 +34,16 @@ public class RegisterJFrame extends javax.swing.JFrame {
         String result = service.register(usernameField.getText(), passwordField.getText(), firstNameField.getText(), surnameField.getText());
         
         switch (result) {
-            case "ERROR-REPEAT":
+            case ErrorCodes.REPEAT:
                 errorLabel.setText("Error: Username already exists");
                 break;
-            case "ERROR-INSERT":
+            case ErrorCodes.INSERT:
                 errorLabel.setText("Error: Couldn't create user.");
                 break;
-            case "ERROR-RETRIEVE":
+            case ErrorCodes.RETRIEVE:
                 errorLabel.setText("Error: Couldn't retrieve user.");
                 break;
-            case "ERROR-DB":
+            case ErrorCodes.DB:
                 errorLabel.setText("Error: Couldn't connect to DB.");
                 break;
             default:

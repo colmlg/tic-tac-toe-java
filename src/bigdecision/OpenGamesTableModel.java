@@ -11,20 +11,20 @@ import javax.swing.table.AbstractTableModel;
  *
  * @author Colm
  */
-public class GamesTableModel extends AbstractTableModel {
+public class OpenGamesTableModel extends AbstractTableModel {
 
     public static final int GAME_ID_COLUMN = 0;
     private final String[] columns = { "Game ID", "Player", "Start Date" };
     
     private final String[][] rowData;
     
-    public GamesTableModel(String[][] data) {
+    public OpenGamesTableModel(String[][] data) {
         this.rowData = data;
     } 
    
-    public GamesTableModel(String response) {
+    public OpenGamesTableModel(String response) {
         String[] rows = response.split("\n");
-        rowData = new String[rows.length][3];
+        rowData = new String[rows.length][columns.length];
         for(int i = 0; i < rows.length; i++) {
             rowData[i] = rows[i].split(",");
         }

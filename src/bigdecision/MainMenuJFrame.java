@@ -1,11 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package bigdecision;
 
-import javax.swing.JTable;
 import ttt.james.server.TTTWebService;
 import ttt.james.server.TTTWebService_Service;
 
@@ -14,12 +8,14 @@ import ttt.james.server.TTTWebService_Service;
  * @author Colm
  */
 public class MainMenuJFrame extends javax.swing.JFrame {
+
     private final TTTWebService service = new TTTWebService_Service().getTTTWebServicePort();
     private final MainCoordinator coordinator;
     private final int userId;
-    
+
     /**
      * Creates new form MainMenuJFrame
+     *
      * @param coordinator
      * @param userId
      */
@@ -28,32 +24,83 @@ public class MainMenuJFrame extends javax.swing.JFrame {
         this.userId = userId;
         initComponents();
         setLocationRelativeTo(null);
-        setupGameTable();
+        updateTables();
     }
     
-    private void setupGameTable() {
+    private void updateTables() {
+        updateMyGamesTable();
+        updateOpenGamesTable();
+    }
+
+    private void updateOpenGamesTable() {
         String response = service.showOpenGames();
-        
-        switch(response) {
-            case "ERROR-NOGAMES":
-                gameTable.setModel(new GamesTableModel(new String[0][0]));
-            case "ERROR-DB":
+
+        switch (response) {
+            case ErrorCodes.NO_GAMES:
+                openGamesTable.setModel(new OpenGamesTableModel(new String[0][0]));
+            case ErrorCodes.DB:
                 errorLabel.setText("Error connecting to database.");
                 break;
             default:
-                GamesTableModel model = new GamesTableModel(response);
-                gameTable.setModel(model);
-                break;  
+                OpenGamesTableModel model = new OpenGamesTableModel(response);
+                openGamesTable.setModel(model);
+                break;
         }
     }
     
-      private void joinGame() {
-        int row = gameTable.getSelectedRow();
+     private void updateMyGamesTable() {
+        String response = service.showAllMyGames(userId);
+
+        switch (response) {
+            case ErrorCodes.NO_GAMES:
+                myGamesTable.setModel(new MyGamesTableModel(new String[0][0]));
+            case ErrorCodes.DB:
+                errorLabel.setText("Error connecting to database.");
+                break;
+            default:
+                MyGamesTableModel model = new MyGamesTableModel(response);
+                myGamesTable.setModel(model);
+                break;
+        }
+    }
+
+    private void openGame() {
+        int row = myGamesTable.getSelectedRow();
         if (row == -1) {
             return;
         }
-        String value = gameTable.getValueAt(row, GamesTableModel.GAME_ID_COLUMN).toString();
-        System.out.println("Selected game " + value);
+        String value = myGamesTable.getValueAt(row, MyGamesTableModel.GAME_ID_COLUMN).toString();
+        int gameId = Integer.parseInt(value);
+        coordinator.goToGameScreen(userId, gameId);
+    }
+
+    private void joinGame() {
+        int row = openGamesTable.getSelectedRow();
+        if (row == -1) {
+            return;
+        }
+        String value = openGamesTable.getValueAt(row, OpenGamesTableModel.GAME_ID_COLUMN).toString();
+        int gameId = Integer.parseInt(value);
+        String response = service.joinGame(userId, gameId);
+        switch (response) {
+            case ErrorCodes.DB:
+                errorLabel.setText("Error connecting to database.");
+                break;
+            case "0":
+                break;
+            case "1":
+                updateTables();
+        }
+    }
+
+    private void newGame() {
+        String response = service.newGame(userId);
+        try {
+            int gameId = Integer.parseInt(response);
+            updateOpenGamesTable();
+        } catch (NumberFormatException e) {
+            errorLabel.setText("Error creating game.");
+        }
     }
 
     /**
@@ -65,13 +112,32 @@ public class MainMenuJFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         myScoresButton = new javax.swing.JButton();
         leaderboardButton = new javax.swing.JButton();
         newGameButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        gameTable = new javax.swing.JTable();
-        errorLabel = new javax.swing.JLabel();
+        openGamesTable = new javax.swing.JTable();
         joinGameButton = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        myGamesTable = new javax.swing.JTable();
+        openGameButton = new javax.swing.JButton();
+        errorLabel = new javax.swing.JLabel();
+        refreshButton = new javax.swing.JButton();
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane2.setViewportView(jTable1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Tic Tac Toe - Main Menu");
@@ -97,7 +163,7 @@ public class MainMenuJFrame extends javax.swing.JFrame {
             }
         });
 
-        gameTable.setModel(new javax.swing.table.DefaultTableModel(
+        openGamesTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -108,10 +174,7 @@ public class MainMenuJFrame extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(gameTable);
-
-        errorLabel.setForeground(new java.awt.Color(255, 0, 0));
-        errorLabel.setText(" ");
+        jScrollPane1.setViewportView(openGamesTable);
 
         joinGameButton.setText("Join Game");
         joinGameButton.addActionListener(new java.awt.event.ActionListener() {
@@ -120,39 +183,76 @@ public class MainMenuJFrame extends javax.swing.JFrame {
             }
         });
 
+        myGamesTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane3.setViewportView(myGamesTable);
+
+        openGameButton.setText("Open Game");
+        openGameButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openGameButtonActionPerformed(evt);
+            }
+        });
+
+        errorLabel.setForeground(new java.awt.Color(255, 0, 0));
+        errorLabel.setText(" ");
+
+        refreshButton.setText("Refresh");
+        refreshButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refreshButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(errorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 367, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(myScoresButton)
-                        .addGap(18, 18, 18)
-                        .addComponent(leaderboardButton)
-                        .addGap(18, 18, 18)
-                        .addComponent(newGameButton)
-                        .addGap(18, 18, 18)
-                        .addComponent(joinGameButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap())
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 397, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(joinGameButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(openGameButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(myScoresButton)
+                .addGap(18, 18, 18)
+                .addComponent(leaderboardButton)
+                .addGap(18, 18, 18)
+                .addComponent(newGameButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(refreshButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(errorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(joinGameButton)
+                .addGap(11, 11, 11)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(openGameButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(errorLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(myScoresButton)
                     .addComponent(leaderboardButton)
                     .addComponent(newGameButton)
-                    .addComponent(joinGameButton))
+                    .addComponent(refreshButton))
                 .addContainerGap())
         );
 
@@ -160,7 +260,7 @@ public class MainMenuJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void myScoresButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_myScoresButtonActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_myScoresButtonActionPerformed
 
     private void leaderboardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leaderboardButtonActionPerformed
@@ -168,21 +268,35 @@ public class MainMenuJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_leaderboardButtonActionPerformed
 
     private void newGameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newGameButtonActionPerformed
-        setupGameTable();
+        newGame();
     }//GEN-LAST:event_newGameButtonActionPerformed
 
     private void joinGameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_joinGameButtonActionPerformed
         joinGame();
     }//GEN-LAST:event_joinGameButtonActionPerformed
 
+    private void openGameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openGameButtonActionPerformed
+        openGame();
+    }//GEN-LAST:event_openGameButtonActionPerformed
+
+    private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
+       updateTables();
+    }//GEN-LAST:event_refreshButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel errorLabel;
-    private javax.swing.JTable gameTable;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTable jTable1;
     private javax.swing.JButton joinGameButton;
     private javax.swing.JButton leaderboardButton;
+    private javax.swing.JTable myGamesTable;
     private javax.swing.JButton myScoresButton;
     private javax.swing.JButton newGameButton;
+    private javax.swing.JButton openGameButton;
+    private javax.swing.JTable openGamesTable;
+    private javax.swing.JButton refreshButton;
     // End of variables declaration//GEN-END:variables
 }

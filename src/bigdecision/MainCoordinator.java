@@ -34,6 +34,11 @@ public class MainCoordinator {
         setCurrentFrame(mainMenu);
     }
     
+    public void goToGameScreen(int userId, int gameId) {
+        GameScreenJFrame gameScreen = new GameScreenJFrame(this, userId, gameId);
+        setCurrentFrame(gameScreen);
+    }
+    
     private void setCurrentFrame(JFrame frame) {
         if (frame != null) {
             frame.setVisible(true);
