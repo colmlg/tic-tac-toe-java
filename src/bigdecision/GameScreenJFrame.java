@@ -27,8 +27,8 @@ public class GameScreenJFrame extends javax.swing.JFrame {
     private final int gameId;
     private final int ROWS = 3;
     private final int COLUMNS = 3;
-    private boolean isMyTurn = true;
     private final JButton[][] gameButtons = new JButton[ROWS][COLUMNS];
+    private boolean isMyTurn = true;
 
     /**
      * Creates new form GameScreenJFrame
@@ -62,8 +62,18 @@ public class GameScreenJFrame extends javax.swing.JFrame {
         }
         boardPanel.setPreferredSize(new Dimension(240, 240));
     }
-    
-     private void startTimer() {
+
+    private void onButtonPressed(int row, int column) {
+        if (!isMyTurn) {
+            JOptionPane.showMessageDialog(null, "It's not your turn!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        service.takeSquare(column, row, gameId, userId);
+        updateGameBoard();
+    }
+
+    private void startTimer() {
         int interval = 1000;
         TimerTask task = new TimerTask() {
             @Override
@@ -71,7 +81,7 @@ public class GameScreenJFrame extends javax.swing.JFrame {
                 updateGameBoard();
             }
         };
-        timer.scheduleAtFixedRate(task, 0, interval); 
+        timer.scheduleAtFixedRate(task, 0, interval);
     }
 
     private void updateGameBoard() {
@@ -92,25 +102,46 @@ public class GameScreenJFrame extends javax.swing.JFrame {
             int column = Integer.parseInt(components[1]);
             int row = Integer.parseInt(components[2]);
 
-            String marker;
-            if (playerId == userId) {
-                marker = "X";
-            } else {
-                marker = "O";
-            }
+            String marker = playerId == userId ? "X" : "O";
             gameButtons[row][column].setText(marker);
             gameButtons[row][column].setEnabled(false);
         }
+        checkForWin();
     }
 
-    private void onButtonPressed(int row, int column) {
-        if (!isMyTurn) {
-            JOptionPane.showMessageDialog(null, "It's not your turn!", "Error", JOptionPane.ERROR_MESSAGE);
+    private void checkForWin() {
+        String response = service.checkWin(gameId);
+        if (response.equals(ErrorCodes.RETRIEVE) || response.equals(ErrorCodes.DB) || response.equals(ErrorCodes.NO_GAME)) {
             return;
         }
 
-        service.takeSquare(column, row, gameId, userId);
-        updateGameBoard();
+        int gameState = Integer.parseInt(response);
+        String gameResult;
+        switch (gameState) {
+            case 1:
+                gameResult = "Player 1 has won!";
+                break;
+            case 2:
+                gameResult = "Player 2 has won!";
+                break;
+            case 3:
+                gameResult = "It's a draw!";
+                break;
+            default:
+                return;
+        }
+        //If we reach this point, the game is over
+        timer.cancel();
+        disableButtons();
+        JOptionPane.showMessageDialog(null, gameResult, "Game Finished", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void disableButtons() {
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLUMNS; j++) {
+                gameButtons[i][j].setEnabled(false);
+            }
+        }
     }
 
     /**

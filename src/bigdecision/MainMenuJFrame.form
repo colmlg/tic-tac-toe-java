@@ -53,7 +53,7 @@
           </Group>
           <Component id="joinGameButton" alignment="0" max="32767" attributes="0"/>
           <Component id="jScrollPane3" pref="0" max="32767" attributes="0"/>
-          <Component id="jButton1" alignment="1" max="32767" attributes="0"/>
+          <Component id="openGameButton" alignment="1" max="32767" attributes="0"/>
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Component id="myScoresButton" min="-2" max="-2" attributes="0"/>
@@ -61,6 +61,8 @@
               <Component id="leaderboardButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="newGameButton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="refreshButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
           <Component id="errorLabel" alignment="0" max="32767" attributes="0"/>
@@ -75,7 +77,7 @@
               <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
               <Component id="jScrollPane3" min="-2" pref="181" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+              <Component id="openGameButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="errorLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace pref="24" max="32767" attributes="0"/>
@@ -83,6 +85,7 @@
                   <Component id="myScoresButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="leaderboardButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="newGameButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="refreshButton" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -164,12 +167,12 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JButton" name="jButton1">
+    <Component class="javax.swing.JButton" name="openGameButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="Open Game"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="openGameButtonActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="errorLabel">
@@ -179,6 +182,14 @@
         </Property>
         <Property name="text" type="java.lang.String" value=" "/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="refreshButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Refresh"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="refreshButtonActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

@@ -122,8 +122,9 @@ public class MainMenuJFrame extends javax.swing.JFrame {
         joinGameButton = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         myGamesTable = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
+        openGameButton = new javax.swing.JButton();
         errorLabel = new javax.swing.JLabel();
+        refreshButton = new javax.swing.JButton();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -195,15 +196,22 @@ public class MainMenuJFrame extends javax.swing.JFrame {
         ));
         jScrollPane3.setViewportView(myGamesTable);
 
-        jButton1.setText("Open Game");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        openGameButton.setText("Open Game");
+        openGameButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                openGameButtonActionPerformed(evt);
             }
         });
 
         errorLabel.setForeground(new java.awt.Color(255, 0, 0));
         errorLabel.setText(" ");
+
+        refreshButton.setText("Refresh");
+        refreshButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refreshButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -214,7 +222,7 @@ public class MainMenuJFrame extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE))
             .addComponent(joinGameButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-            .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(openGameButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(myScoresButton)
@@ -222,6 +230,8 @@ public class MainMenuJFrame extends javax.swing.JFrame {
                 .addComponent(leaderboardButton)
                 .addGap(18, 18, 18)
                 .addComponent(newGameButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(refreshButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(errorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -234,14 +244,15 @@ public class MainMenuJFrame extends javax.swing.JFrame {
                 .addGap(11, 11, 11)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
+                .addComponent(openGameButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(errorLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(myScoresButton)
                     .addComponent(leaderboardButton)
-                    .addComponent(newGameButton))
+                    .addComponent(newGameButton)
+                    .addComponent(refreshButton))
                 .addContainerGap())
         );
 
@@ -249,7 +260,7 @@ public class MainMenuJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void myScoresButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_myScoresButtonActionPerformed
-        updateTables();
+
     }//GEN-LAST:event_myScoresButtonActionPerformed
 
     private void leaderboardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leaderboardButtonActionPerformed
@@ -264,14 +275,17 @@ public class MainMenuJFrame extends javax.swing.JFrame {
         joinGame();
     }//GEN-LAST:event_joinGameButtonActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void openGameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openGameButtonActionPerformed
         openGame();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_openGameButtonActionPerformed
+
+    private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
+       updateTables();
+    }//GEN-LAST:event_refreshButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel errorLabel;
-    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -281,6 +295,8 @@ public class MainMenuJFrame extends javax.swing.JFrame {
     private javax.swing.JTable myGamesTable;
     private javax.swing.JButton myScoresButton;
     private javax.swing.JButton newGameButton;
+    private javax.swing.JButton openGameButton;
     private javax.swing.JTable openGamesTable;
+    private javax.swing.JButton refreshButton;
     // End of variables declaration//GEN-END:variables
 }
