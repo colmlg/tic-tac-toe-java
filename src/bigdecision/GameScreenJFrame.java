@@ -120,12 +120,15 @@ public class GameScreenJFrame extends javax.swing.JFrame {
         switch (gameState) {
             case 1:
                 gameResult = "Player 1 has won!";
+                service.setGameState(gameId, gameState);
                 break;
             case 2:
                 gameResult = "Player 2 has won!";
+                service.setGameState(gameId, gameState);
                 break;
             case 3:
                 gameResult = "It's a draw!";
+                service.setGameState(gameId, gameState);
                 break;
             default:
                 return;

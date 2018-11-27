@@ -35,7 +35,7 @@ public class LoginJFrame extends javax.swing.JFrame {
             errorLabel.setText("Error logging in.");
             return;
         }
-   
+        Constants.username = usernameField.getText();
         coordinator.goToMainMenu(result);   
     }
     

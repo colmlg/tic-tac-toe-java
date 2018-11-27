@@ -260,11 +260,11 @@ public class MainMenuJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void myScoresButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_myScoresButtonActionPerformed
-
+        coordinator.openMyScores(userId);
     }//GEN-LAST:event_myScoresButtonActionPerformed
 
     private void leaderboardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leaderboardButtonActionPerformed
-        // TODO add your handling code here:
+        coordinator.openLeaderboard();
     }//GEN-LAST:event_leaderboardButtonActionPerformed
 
     private void newGameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newGameButtonActionPerformed
