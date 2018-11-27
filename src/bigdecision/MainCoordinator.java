@@ -39,6 +39,14 @@ public class MainCoordinator {
         setCurrentFrame(gameScreen);
     }
     
+    public void openLeaderboard() {
+        new LeaderBoardJFrame().setVisible(true);
+    }
+    
+    public void openMyScores(int userId){
+        new MyScoresJFrame(userId).setVisible(true);
+    }
+    
     private void setCurrentFrame(JFrame frame) {
         if (frame != null) {
             frame.setVisible(true);

@@ -20,6 +20,11 @@ public class LeaderBoardJFrame extends javax.swing.JFrame {
      * @param coordinator
      */
     public LeaderBoardJFrame() {
+        initComponents();
+        setupLeaderBoard();
+    }
+
+    private void setupLeaderBoard() {
         String output = service.leagueTable();
         
         switch (output) {
@@ -33,10 +38,9 @@ public class LeaderBoardJFrame extends javax.swing.JFrame {
                 //pop result of leagueTable() into LeaderBoardTableModel
                 LeaderBoardTableModel model = new LeaderBoardTableModel(output);
                 leaderBoardTable.setModel(model);
-            break;
-                        
+                break;
+                
         }
-        initComponents();  
     }
 
     /**
@@ -52,7 +56,7 @@ public class LeaderBoardJFrame extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         leaderBoardTable = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         leaderBoardTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {

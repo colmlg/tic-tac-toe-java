@@ -49,6 +49,7 @@ public class RegisterJFrame extends javax.swing.JFrame {
             default:
                 try {
                     int userId = Integer.parseInt(result);
+                    Constants.username = usernameField.getText();
                     coordinator.goToMainMenu(userId);
                 } catch (NumberFormatException e) {
                     errorLabel.setText("Error: Invalid Response.");
